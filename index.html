@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>KHALIL BRAIN</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #101827;
+  color: #f4f7ff;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  padding: 15px 0;
+}
+
+header h1 {
+  color: #60e5c0;
+  font-size: clamp(27px, 7vw, 38px);
+  margin: 8px 0;
+}
+
+header p {
+  color: #b7c2d7;
+  margin: 8px 0 20px;
+  font-size: 15px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  background: #1c293d;
+  padding: 12px 5px;
+  border-radius: 14px;
+  text-align: center;
+  min-width: 0;
+}
+
+.stat span {
+  display: block;
+  color: #b7c2d7;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.stat strong {
+  font-size: 21px;
+  color: #60e5c0;
+}
+
+.card {
+  background: #1c293d;
+  border: 1px solid #30415c;
+  border-radius: 20px;
+  padding: clamp(15px, 4vw, 25px);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 20px;
+}
+
+button, select {
+  font: inherit;
+  border: 0;
+  border-radius: 12px;
+  min-height: 48px;
+}
+
+select {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 12px;
+  color: white;
+  background: #293951;
+  font-size: 16px;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+  padding: 12px;
+  font-weight: bold;
+}
+
+button:focus-visible, select:focus-visible {
+  outline: 3px solid #60e5c0;
+  outline-offset: 3px;
+}
+
+.question-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #b7c2d7;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 20px;
+  background: #34435a;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: #60e5c0;
+  transition: width .25s;
+}
+
+#question {
+  font-size: clamp(21px, 5.5vw, 28px);
+  line-height: 1.7;
+  text-align: center;
+  margin: 12px 0 22px;
+  overflow-wrap: anywhere;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+}
+
+.answer {
+  width: 100%;
+  min-height: 56px;
+  background: #293951;
+  color: white;
+  border: 2px solid transparent;
+  text-align: right;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.answer:active {
+  transform: scale(.99);
+}
+
+.answer.correct {
+  background: #174b3e;
+  border-color: #60e5c0;
+}
+
+.answer.wrong {
+  background: #562d3b;
+  border-color: #ff8294;
+}
+
+.answer:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+#explanation {
+  display: none;
+  background: #142f32;
+  border-radius: 12px;
+  padding: 14px;
+  line-height: 1.8;
+  margin-top: 16px;
+  color: #d5fff1;
+}
+
+#nextBtn, #restartBtn {
+  width: 100%;
+  margin-top: 16px;
+  background: #60e5c0;
+  color: #10251f;
+  font-size: 17px;
+}
+
+#nextBtn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+#result {
+  display: none;
+  text-align: center;
+  padding: 20px 0 5px;
+}
+
+#result h2 {
+  color: #60e5c0;
+  font-size: 27px;
+}
+
+#result p {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+footer {
+  text-align: center;
+  color: #8795aa;
+  font-size: 13px;
+  padding: 20px 0 8px;
+}
+
+@media (min-width: 520px) {
+  .answers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .answer {
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  body {
+    padding: 10px;
+  }
+
+  .stat strong {
+    font-size: 18px;
+  }
+
+  .question-info {
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <header>
+    <h1>🧠 KHALIL BRAIN</h1>
+    <p>اختبر ذكاءك وطوّر تفكيرك أينما كنت!</p>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <span>النقاط</span>
+      <strong id="score">0</strong>
+    </div>
+    <div class="stat">
+      <span>السؤال</span>
+      <strong id="count">1/20</strong>
+    </div>
+    <div class="stat">
+      <span>الإجابات الصحيحة</span>
+      <strong id="correctCount">0</strong>
+    </div>
+  </section>
+
+  <main class="card">
+    <div class="filters" id="filters">
+      <select id="category" aria-label="اختر نوع الأسئلة">
+        <option value="الكل">🎯 جميع الألغاز</option>
+        <option value="منطق">🧩 المنطق</option>
+        <option value="رياضيات">🔢 الرياضيات</option>
+        <option value="أنماط">🔍 الأنماط</option>
+        <option value="معلومات">💡 معلومات عامة</option>
+      </select>
+    </div>
+
+    <div id="game">
+      <div class="question-info">
+        <span id="categoryLabel">الفئة: منطق</span>
+        <span>فكّر جيدًا قبل الإجابة!</span>
+      </div>
+
+      <div class="progress">
+        <div id="progressBar"></div>
+      </div>
+
+      <h2 id="question">جارٍ تجهيز الأسئلة...</h2>
+      <div class="answers" id="answers"></div>
+      <div id="explanation" role="status" aria-live="polite"></div>
+      <button id="nextBtn" disabled>السؤال التالي ←</button>
+    </div>
+
+    <section id="result" aria-live="polite">
+      <h2>🎉 انتهت الجولة!</h2>
+      <p id="resultText"></p>
+      <button id="restartBtn">🔄 العب من جديد</button>
+    </section>
+  </main>
+
+  <footer>صُنع بحب ❤️ KHALIL BRAIN</footer>
+</div>
+
+<script>
+const allQuestions = [
+  {c:"منطق",q:"شيء كلما أخذت منه كبر، ما هو؟",a:["الحفرة","البحر","الكتاب","القلم"],correct:0,e:"كلما أزلت التراب من الحفرة أصبحت أكبر."},
+  {c:"رياضيات",q:"ما العدد الذي يأتي بعد 2، 4، 6، 8؟",a:["9","10","11","12"],correct:1,e:"نضيف 2 في كل مرة، لذلك العدد هو 10."},
+  {c:"أنماط",q:"أكمل النمط: 1، 3، 5، 7، ؟",a:["8","9","10","11"],correct:1,e:"هذه أعداد فردية متتالية، التالي هو 9."},
+  {c:"منطق",q:"لديك 3 تفاحات وأخذت تفاحتين، كم تفاحة أصبحت لديك؟",a:["1","2","3","5"],correct:1,e:"أخذت تفاحتين، إذن لديك تفاحتان."},
+  {c:"رياضيات",q:"كم يساوي 12 × 3؟",a:["24","36","32","42"],correct:1,e:"12 × 3 = 36."},
+  {c:"معلومات",q:"كم عدد أيام الأسبوع؟",a:["5","6","7","8"],correct:2,e:"أيام الأسبوع سبعة."},
+  {c:"أنماط",q:"أكمل: 5، 10، 15، 20، ؟",a:["22","24","25","30"],correct:2,e:"نضيف 5 في كل مرة، إذن 25."},
+  {c:"منطق",q:"أي شيء له أسنان لكنه لا يعض؟",a:["الكلب","المشط","القط","السمك"],correct:1,e:"المشط له أسنان لكنه لا يعض."},
+  {c:"رياضيات",q:"كم يساوي 50 ÷ 5؟",a:["5","10","15","20"],correct:1,e:"50 مقسومة على 5 تساوي 10."},
+  {c:"معلومات",q:"ما الكوكب الذي نعيش عليه؟",a:["المريخ","الزهرة","الأرض","زحل"],correct:2,e:"نعيش على كوكب الأرض."},
+  {c:"أنماط",q:"أكمل: 2، 4، 8، 16، ؟",a:["18","24","30","32"],correct:3,e:"نضاعف العدد في كل مرة، 16 × 2 = 32."},
+  {c:"منطق",q:"ما الذي يمكنه السفر حول العالم وهو ثابت في مكانه؟",a:["الطائرة","الطابع البريدي","السيارة","السفينة"],correct:1,e:"الطابع يبقى على الظرف الذي يسافر حول العالم."},
+  {c:"رياضيات",q:"لديك 15 قطعة حلوى وأعطيت 6، كم بقي؟",a:["7","8","9","10"],correct:2,e:"15 - 6 = 9."},
+  {c:"معلومات",q:"كم شهرًا في السنة؟",a:["10","11","12","13"],correct:2,e:"السنة فيها 12 شهرًا."},
+  {c:"أنماط",q:"أكمل: 10، 20، 30، 40، ؟",a:["45","50","55","60"],correct:1,e:"نضيف 10 في كل مرة، فالجواب 50."},
+  {c:"منطق",q:"أيهما أثقل: كيلوغرام حديد أم كيلوغرام قطن؟",a:["الحديد","القطن","متساويان","لا يمكن معرفة ذلك"],correct:2,e:"كلاهما يزن كيلوغرامًا واحدًا."},
+  {c:"رياضيات",q:"كم يساوي 9 + 8؟",a:["15","16","17","18"],correct:2,e:"9 + 8 = 17."},
+  {c:"معلومات",q:"ما النجم الذي يضيء لنا نهارًا؟",a:["القمر","الشمس","نجم الشمال","المريخ"],correct:1,e:"الشمس هي النجم الذي يضيء الأرض نهارًا."},
+  {c:"أنماط",q:"أكمل: 100، 90، 80، 70، ؟",a:["50","55","60","65"],correct:2,e:"نطرح 10 في كل مرة، فالجواب 60."},
+  {c:"منطق",q:"أمامك بابان، واحد مفتوح والآخر مغلق. أيهما تستطيع الدخول منه؟",a:["المفتوح","المغلق","كلاهما مستحيل","لا أحد"],correct:0,e:"يمكنك الدخول من الباب المفتوح."}
+];
+
+const $ = id => document.getElementById(id);
+
+let questions = [];
+let index = 0;
+let score = 0;
+let correctCount = 0;
+let answered = false;
+
+function shuffle(list) {
+  const arr = [...list];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startGame() {
+  const selected = $("category").value;
+  const filtered = selected === "الكل"
+    ? allQuestions
+    : allQuestions.filter(item => item.c === selected);
+
+  questions = shuffle(filtered);
+  index = 0;
+  score = 0;
+  correctCount = 0;
+  answered = false;
+
+  $("score").textContent = score;
+  $("correctCount").textContent = correctCount;
+  $("game").style.display = "block";
+  $("result").style.display = "none";
+  $("filters").style.display = "grid";
+
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const item = questions[index];
+
+  $("count").textContent = (index + 1) + "/" + questions.length;
+  $("categoryLabel").textContent = "الفئة: " + item.c;
+  $("question").textContent = item.q;
+  $("progressBar").style.width =
+    (index / questions.length * 100) + "%";
+
+  $("answers").innerHTML = "";
+  $("explanation").style.display = "none";
+  $("nextBtn").disabled = true;
+  $("nextBtn").textContent =
+    index === questions.length - 1 ? "عرض النتيجة 🏆" : "السؤال التالي ←";
+
+  item.a.forEach((answer, i) => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = answer;
+    button.addEventListener("click", () => chooseAnswer(i));
+    $("answers").appendChild(button);
+  });
+}
+
+function chooseAnswer(choice) {
+  if (answered) return;
+  answered = true;
+
+  const item = questions[index];
+  const buttons = $("answers").querySelectorAll("button");
+
+  buttons.forEach((button, i) => {
+    button.disabled = true;
+    if (i === item.correct) button.classList.add("correct");
+    if (i === choice && choice !== item.correct) {
+      button.classList.add("wrong");
+    }
+  });
+
+  if (choice === item.correct) {
+    score += 10;
+    correctCount++;
+    $("score").textContent = score;
+    $("correctCount").textContent = correctCount;
+    $("explanation").textContent = "✅ إجابة صحيحة! " + item.e;
+  } else {
+    $("explanation").textContent =
+      "❌ ليست الإجابة الصحيحة. " +
+      "الإجابة هي: " + item.a[item.correct] + ". " + item.e;
+  }
+
+  $("explanation").style.display = "block";
+  $("nextBtn").disabled = false;
+  $("progressBar").style.width =
+    ((index + 1) / questions.length * 100) + "%";
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  if (index < questions.length - 1) {
+    index++;
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  $("game").style.display = "none";
+  $("result").style.display = "block";
+  $("filters").style.display = "none";
+
+  const percent = Math.round(correctCount / questions.length * 100);
+
+  $("resultText").textContent =
+    "حصلت على " + score + " نقطة من " +
+    (questions.length * 10) + " نقطة. " +
+    "أجبت إجابة صحيحة عن " + correctCount +
+    " من " + questions.length + " سؤالًا. " +
+    "نسبة نجاحك: " + percent + "%.";
+}
+
+$("nextBtn").addEventListener("click", nextQuestion);
+$("restartBtn").addEventListener("click", startGame);
+$("category").addEventListener("change", startGame);
+
+startGame();
+</script>
+</body>
+</html>
